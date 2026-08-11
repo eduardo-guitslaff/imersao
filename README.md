@@ -20,9 +20,11 @@ nenhum lugar do site nome de remetente, grupo ou contato — é surpresa mesmo.
 - As seções seguintes aparecem com animação conforme o usuário rola a página
   (scroll reveal).
 - Contagem regressiva em tempo real até o evento.
-- Botão "Adicionar à agenda" gera um arquivo `.ics` na hora, sem precisar de
-  servidor nem de link externo — funciona com Google Agenda, Apple Calendar,
-  Outlook etc.
+- Botão principal **"Adicionar ao Google Agenda"** abre o Google Agenda numa
+  nova aba, já com título, data, horário e local preenchidos.
+- Botão secundário (link discreto) baixa um arquivo `.ics` — funciona pra
+  quem usa Apple Calendar, Outlook, etc.
+- Nenhum dos dois revela quem está enviando o convite.
 
 ## Antes de publicar — ajuste em `script.js`
 No topo do arquivo tem o bloco `EVENTO`:
@@ -33,10 +35,13 @@ const EVENTO = {
   dataFim:    { ano: 2026, mes: 8, dia: 15, hora: 21, minuto: 0 },
   local: "a confirmar",
   descricao: "Você foi convidado(a). Guarde esta data.",
+  fusoHorario: "America/Sao_Paulo",
 };
 ```
 Troque `hora`/`minuto` e `local` pelos dados reais (sem precisar revelar quem
-está convidando — pode deixar só o endereço/horário).
+está convidando — pode deixar só o endereço/horário). `fusoHorario` já está
+configurado para o horário de Brasília; só troque se o evento for em outro
+fuso.
 
 ## Como testar localmente (VS Code)
 1. Abra a pasta no VS Code.
