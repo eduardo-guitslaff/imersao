@@ -1,0 +1,444 @@
+/* =========================================================
+   TOKENS
+========================================================= */
+:root{
+  --night:        #0d0e24;
+  --night-deep:   #05061a;
+  --gold:         #cba135;
+  --gold-soft:    #eed99b;
+  --paper:        #f8f2e2;
+  --paper-dim:    #efe6cf;
+  --ember:        #b8593c;
+  --ink:          #201b13;
+  --text-soft:    #c7c3db;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body:    "Sora", system-ui, -apple-system, sans-serif;
+
+  --max-w: 640px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--night);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   FUNDO DINÂMICO
+========================================================= */
+#sky{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--night) 0%, var(--night-deep) 100%);
+}
+
+.glow{
+  position: fixed;
+  top: 6%;
+  left: 50%;
+  width: 80vw;
+  height: 80vw;
+  max-width: 680px;
+  max-height: 680px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(203,161,53,0.14) 0%, rgba(203,161,53,0) 70%);
+  filter: blur(6px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+main{ position: relative; z-index: 1; }
+
+/* =========================================================
+   CENA 1 — SELO
+========================================================= */
+.scene{
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: opacity .7s ease, transform .7s ease, visibility 0s linear .7s;
+}
+
+.scene.is-hidden{
+  opacity: 0;
+  transform: translateY(-24px) scale(.97);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.eyebrow{
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  opacity: .85;
+}
+
+/* selo interativo */
+.seal{
+  position: relative;
+  width: 132px;
+  height: 132px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.seal__ring{
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(238,217,155,.35);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse{
+  0%, 100%{ transform: scale(1); opacity: .5; }
+  50%{ transform: scale(1.08); opacity: 1; }
+}
+
+.seal__core{
+  position: absolute;
+  inset: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold-soft) 0%, var(--gold) 55%, var(--ember) 100%);
+  box-shadow: 0 0 30px rgba(203,161,53,.55), inset 0 2px 6px rgba(255,255,255,.35);
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .5s ease;
+}
+
+.seal__spark{
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+}
+
+.seal.is-open .seal__core{
+  transform: scale(1.5);
+  opacity: 0;
+}
+
+.seal.is-open .seal__ring{
+  animation: none;
+  transform: scale(2.2);
+  opacity: 0;
+  transition: transform .8s ease, opacity .8s ease;
+}
+
+.seal.is-open .seal__spark{
+  animation: sparkBurst .9s ease forwards;
+}
+.seal.is-open .s1{ --tx: -70px; --ty: -50px; animation-delay: 0s; }
+.seal.is-open .s2{ --tx: 80px;  --ty: -30px; animation-delay: .05s; }
+.seal.is-open .s3{ --tx: 10px;  --ty: -90px; animation-delay: .1s; }
+
+@keyframes sparkBurst{
+  0%{ transform: translate(-50%, -50%) scale(.4); opacity: 1; }
+  100%{ transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 0; }
+}
+
+.tap-hint{
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-soft);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse{
+  0%, 100%{ opacity: .55; }
+  50%{ opacity: 1; }
+}
+
+.seal:focus-visible{
+  outline: 3px solid var(--gold-soft);
+  outline-offset: 8px;
+  border-radius: 50%;
+}
+
+/* =========================================================
+   TEXTO EM GRADIENTE (assinatura visual)
+========================================================= */
+.gradient-text{
+  background: linear-gradient(90deg, var(--gold-soft), var(--gold) 45%, var(--ember));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes shimmer{
+  0%, 100%{ background-position: 0% center; }
+  50%{ background-position: 100% center; }
+}
+
+/* =========================================================
+   SEÇÕES REVELADAS (scroll-reveal)
+========================================================= */
+.letter,
+.invite{
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 12vh 24px 8vh;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.3,1);
+}
+
+.letter.is-visible,
+.invite.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.letter__inner,
+.invite__inner{
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dim) 100%);
+  color: var(--ink);
+  border-radius: 18px;
+  padding: 48px 32px 40px;
+  box-shadow: 0 30px 70px -20px rgba(0,0,0,.55);
+}
+
+.letter__eyebrow,
+.invite__eyebrow{
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ember);
+  font-weight: 500;
+}
+
+.letter__title,
+.invite__title{
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(28px, 6vw, 40px);
+  line-height: 1.18;
+  margin: 0 0 26px;
+  color: var(--ink);
+}
+
+.letter__body p{
+  margin: 0 0 18px;
+  font-size: 16px;
+  color: #3a3327;
+}
+
+.verse{
+  margin: 28px 0 6px;
+  padding: 20px 22px;
+  border-left: 3px solid var(--ember);
+  background: rgba(184,89,60,.08);
+  border-radius: 0 10px 10px 0;
+}
+
+.verse p{
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.55;
+  color: #2c2617;
+}
+
+.verse cite{
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.candle{
+  position: relative;
+  width: 14px;
+  height: 60px;
+  margin: 36px auto 4px;
+}
+
+.candle__body{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(180deg, #fff7e3, #e9dcb8);
+  border-radius: 2px;
+}
+
+.candle__flame{
+  position: absolute;
+  bottom: 38px;
+  left: 50%;
+  width: 10px;
+  height: 18px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 50% 70%, #fff3c4 0%, var(--gold) 55%, var(--ember) 100%);
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  animation: flicker 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(203,161,53,.7));
+}
+
+@keyframes flicker{
+  0%, 100%{ transform: translateX(-50%) scale(1) rotate(0deg); }
+  25%{ transform: translateX(-50%) scale(1.05, .95) rotate(-2deg); }
+  50%{ transform: translateX(-50%) scale(.95, 1.05) rotate(1deg); }
+  75%{ transform: translateX(-50%) scale(1.02, .98) rotate(2deg); }
+}
+
+/* =========================================================
+   CENA 3 — CONVITE / CONTAGEM
+========================================================= */
+.invite__inner{ text-align: center; }
+
+.invite__mystery{
+  font-size: 16px;
+  color: #4a4230;
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+
+.countdown{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 34px;
+}
+
+.countdown__unit{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 12px;
+  padding: 14px 8px;
+  min-width: 62px;
+  flex: 1;
+  max-width: 78px;
+}
+
+.countdown__num{
+  font-family: var(--font-display);
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold-soft);
+}
+
+.countdown__label{
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .75;
+  margin-top: 2px;
+}
+
+.cta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+  text-decoration: none;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: .02em;
+  padding: 16px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform .25s ease, background .25s ease;
+}
+
+.cta svg{ color: var(--gold-soft); }
+
+.cta:hover,
+.cta:focus-visible{
+  background: var(--ember);
+  transform: translateY(-2px);
+}
+
+.cta:focus-visible{
+  outline: 3px solid var(--gold-soft);
+  outline-offset: 3px;
+}
+
+.invite__note{
+  margin: 18px 0 0;
+  font-size: 12px;
+  color: #6b6250;
+  letter-spacing: .02em;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer{
+  text-align: center;
+  padding: 8px 24px 56px;
+  opacity: 0;
+  transition: opacity .9s ease .1s;
+}
+
+.site-footer.is-visible{ opacity: 1; }
+
+.site-footer p{
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--text-soft);
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+@media (min-width: 720px){
+  .letter__inner,
+  .invite__inner{ padding: 64px 64px 56px; }
+  .letter,
+  .invite{ padding-top: 8vh; }
+  .countdown__unit{ min-width: 76px; max-width: 96px; padding: 18px 10px; }
+}
+
+@media (min-width: 1024px){
+  .seal{ width: 150px; height: 150px; }
+}

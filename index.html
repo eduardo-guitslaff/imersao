@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Uma mensagem para você</title>
+<meta name="description" content="Alguém pensou em você hoje. Abra e descubra." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- fundo animado: estrelas + brilho, desenhado em canvas -->
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ===== CENA 1 — selo / envelope ===== -->
+  <section class="scene" id="scene">
+    <p class="eyebrow">algo chegou até você hoje</p>
+
+    <button class="seal" id="seal" aria-label="Tocar para abrir a mensagem">
+      <span class="seal__ring"></span>
+      <span class="seal__core"></span>
+      <span class="seal__spark s1"></span>
+      <span class="seal__spark s2"></span>
+      <span class="seal__spark s3"></span>
+    </button>
+
+    <p class="tap-hint" id="tapHint">toque para abrir</p>
+  </section>
+
+  <!-- ===== CENA 2 — carta revelada ===== -->
+  <section class="letter" id="letterSection">
+    <div class="letter__inner">
+
+      <p class="letter__eyebrow" id="letterEyebrow">para <span id="nomeDestinatario">você</span></p>
+
+      <h1 class="letter__title">
+        <span class="gradient-text">Seja bem-vindo(a).</span><br>
+        Você é especial.
+      </h1>
+
+      <div class="letter__body">
+        <p>
+          Antes de qualquer coisa ser embalada, antes de qualquer etiqueta ser colada,
+          alguém pensou em você. Esta encomenda carrega mais do que o que está dentro
+          da caixa — ela carrega um recado que precisava chegar até aqui.
+        </p>
+        <p>
+          Você não é só um número de pedido, um endereço de entrega. Você foi
+          pensado(a) e formado(a) com cuidado, muito antes de nascer — e isso não
+          muda dependendo do seu dia, da sua semana ou do que você está sentindo agora.
+        </p>
+      </div>
+
+      <blockquote class="verse">
+        <p>
+          Você faz parte de um povo escolhido, chamado para sair da escuridão e viver
+          à luz — não por mérito, mas porque foi chamado(a) de propósito.
+        </p>
+        <cite>inspirado em 1 Pedro 2:9</cite>
+      </blockquote>
+
+      <div class="candle" aria-hidden="true">
+        <div class="candle__flame"></div>
+        <div class="candle__body"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== CENA 3 — convite / contagem regressiva ===== -->
+  <section class="invite" id="inviteSection">
+    <div class="invite__inner">
+
+      <p class="invite__eyebrow">guarde essa data</p>
+      <h2 class="invite__title">Nos vemos sábado,<br><span class="gradient-text">dia 15.</span></h2>
+      <p class="invite__mystery">
+        Não pergunte quem. Isso é surpresa.<br>
+        Só apareça — vai valer a pena.
+      </p>
+
+      <div class="countdown" id="countdown" aria-live="polite">
+        <div class="countdown__unit">
+          <span class="countdown__num" id="cdDays">00</span>
+          <span class="countdown__label">dias</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__num" id="cdHours">00</span>
+          <span class="countdown__label">horas</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__num" id="cdMinutes">00</span>
+          <span class="countdown__label">min</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__num" id="cdSeconds">00</span>
+          <span class="countdown__label">seg</span>
+        </div>
+      </div>
+
+      <button class="cta" id="ctaCalendar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Adicionar à agenda
+      </button>
+
+      <p class="invite__note">local e horário serão confirmados em breve</p>
+
+    </div>
+  </section>
+
+  <footer class="site-footer" id="siteFooter">
+    <p>feito com carinho, para alguém que precisava ouvir isso hoje</p>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
