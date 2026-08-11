@@ -20,19 +20,39 @@
 
 <main>
 
-  <!-- ===== CENA 1 — selo / envelope ===== -->
+  <!-- ===== CENA 1 — rastreio do pedido (disfarce) ===== -->
   <section class="scene" id="scene">
-    <p class="eyebrow">algo chegou até você hoje</p>
+    <div class="tracking">
+      <p class="tracking__eyebrow">rastreio do pedido</p>
+      <p class="tracking__code" id="trackingCode">#PED-000000</p>
 
-    <button class="seal" id="seal" aria-label="Tocar para abrir a mensagem">
-      <span class="seal__ring"></span>
-      <span class="seal__core"></span>
-      <span class="seal__spark s1"></span>
-      <span class="seal__spark s2"></span>
-      <span class="seal__spark s3"></span>
-    </button>
+      <div class="tracking__steps" id="trackingSteps">
+        <div class="step" data-step="0">
+          <span class="step__dot"></span>
+          <span class="step__label">Pedido confirmado</span>
+        </div>
+        <div class="step" data-step="1">
+          <span class="step__dot"></span>
+          <span class="step__label">Em transporte</span>
+        </div>
+        <div class="step" data-step="2">
+          <span class="step__dot"></span>
+          <span class="step__label">Saiu para entrega</span>
+        </div>
+        <div class="step" data-step="3">
+          <span class="step__dot"></span>
+          <span class="step__label">Entregue</span>
+        </div>
+      </div>
 
-    <p class="tap-hint" id="tapHint">toque para abrir</p>
+      <div class="tracking__bar">
+        <div class="tracking__bar-fill" id="progressFill"></div>
+      </div>
+
+      <p class="tracking__status" id="trackingStatus">preparando seu pedido...</p>
+
+      <button class="tracking__skip" id="skipTracking" type="button">pular</button>
+    </div>
   </section>
 
   <!-- ===== CENA 2 — carta revelada ===== -->
@@ -123,7 +143,7 @@
   </section>
 
   <footer class="site-footer" id="siteFooter">
-    <p>feito com carinho, para alguém especial!</p>
+    <p>feito com carinho, para alguém que precisava ouvir isso hoje</p>
   </footer>
 
 </main>
