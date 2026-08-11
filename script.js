@@ -127,38 +127,105 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     3. ABRIR SELO -> REVELAR CARTA
+     3. RASTREIO DO PEDIDO -> REVELAR CARTA
   ========================================================= */
-  const seal = document.getElementById("seal");
   const scene = document.getElementById("scene");
   const letterSection = document.getElementById("letterSection");
-  const tapHint = document.getElementById("tapHint");
+  const trackingCode = document.getElementById("trackingCode");
+  const trackingStatus = document.getElementById("trackingStatus");
+  const progressFill = document.getElementById("progressFill");
+  const skipBtn = document.getElementById("skipTracking");
+  const steps = document.querySelectorAll(".step");
 
-  let opened = false;
-
-  function openLetter() {
-    if (opened) return;
-    opened = true;
-
-    seal.classList.add("is-open");
-    if (tapHint) tapHint.style.opacity = "0";
-
-    setTimeout(() => {
-      scene.classList.add("is-hidden");
-      letterSection.classList.add("is-visible");
-      letterSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 650);
+  // código de pedido fake, só pra parecer real
+  if (trackingCode) {
+    const codigo = Math.floor(100000 + Math.random() * 900000);
+    trackingCode.textContent = `#PED-${codigo}`;
   }
 
-  if (seal) {
-    seal.addEventListener("click", openLetter);
-    seal.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openLetter();
-      }
+  const ETAPAS = [
+    { pct: 15,  status: "preparando seu pedido..." },
+    { pct: 45,  status: "seu pedido está em transporte..." },
+    { pct: 75,  status: "saiu para entrega..." },
+    { pct: 100, status: "entregue! 🎉" },
+  ];
+
+  let etapaAtual = 0;
+  let sequenciaTimer = null;
+  let revealed = false;
+
+  function marcarEtapa(index) {
+    steps.forEach((step) => {
+      const n = Number(step.dataset.step);
+      step.classList.toggle("is-done", n < index);
+      step.classList.toggle("is-active", n === index);
     });
   }
+
+  function avancarEtapa() {
+    if (revealed) return;
+    const etapa = ETAPAS[etapaAtual];
+    if (progressFill) progressFill.style.width = etapa.pct + "%";
+    if (trackingStatus) trackingStatus.textContent = etapa.status;
+    marcarEtapa(etapaAtual);
+
+    if (etapaAtual === ETAPAS.length - 1) {
+      // chegou em "entregue"
+      marcarEtapa(ETAPAS.length); // marca todos como concluídos
+      dispararConfete();
+      sequenciaTimer = setTimeout(revelarCarta, 1400);
+      return;
+    }
+
+    etapaAtual++;
+    const delay = prefersReducedMotion ? 200 : 1100;
+    sequenciaTimer = setTimeout(avancarEtapa, delay);
+  }
+
+  function dispararConfete() {
+    if (prefersReducedMotion) return;
+    const cores = ["#f5822c", "#ffb066", "#cba135", "#eed99b", "#f8f2e2"];
+    const total = 60;
+    for (let i = 0; i < total; i++) {
+      const piece = document.createElement("div");
+      piece.className = "confetti";
+      piece.style.left = Math.random() * 100 + "vw";
+      piece.style.background = cores[Math.floor(Math.random() * cores.length)];
+      piece.style.animationDuration = 2 + Math.random() * 1.5 + "s";
+      piece.style.animationDelay = Math.random() * 0.4 + "s";
+      piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4000);
+    }
+  }
+
+  function revelarCarta() {
+    if (revealed) return;
+    revealed = true;
+    clearTimeout(sequenciaTimer);
+
+    scene.classList.add("is-hidden");
+    letterSection.classList.add("is-visible");
+    letterSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function pularRastreio() {
+    if (revealed) return;
+    clearTimeout(sequenciaTimer);
+    etapaAtual = ETAPAS.length - 1;
+    if (progressFill) progressFill.style.width = "100%";
+    if (trackingStatus) trackingStatus.textContent = ETAPAS[ETAPAS.length - 1].status;
+    marcarEtapa(ETAPAS.length);
+    dispararConfete();
+    setTimeout(revelarCarta, 700);
+  }
+
+  if (skipBtn) {
+    skipBtn.addEventListener("click", pularRastreio);
+  }
+
+  // inicia a sequência automaticamente
+  sequenciaTimer = setTimeout(avancarEtapa, 500);
 
   /* =========================================================
      4. SCROLL REVEAL (convite + rodapé)
