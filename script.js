@@ -13,6 +13,7 @@ const EVENTO = {
   dataFim:    { ano: 2026, mes: 8, dia: 15, hora: 21, minuto: 0 },
   local: "a confirmar",
   descricao: "Você foi convidado(a). Guarde esta data.",
+  fusoHorario: "America/Sao_Paulo",
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -228,11 +229,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     6. ADICIONAR À AGENDA (.ics) — sem revelar remetente
+     6. ADICIONAR À AGENDA — sem revelar remetente
   ========================================================= */
   const ctaCalendar = document.getElementById("ctaCalendar");
+  const ctaIcs = document.getElementById("ctaIcs");
 
-  function formatICSDate(d) {
+  function formatCalendarDate(d) {
     return (
       d.ano.toString().padStart(4, "0") +
       String(d.mes).padStart(2, "0") +
@@ -244,9 +246,31 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // botão principal: abre o Google Agenda direto, já preenchido
+  function abrirGoogleCalendar() {
+    const dtStart = formatCalendarDate(EVENTO.dataInicio);
+    const dtEnd = formatCalendarDate(EVENTO.dataFim);
+
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: EVENTO.titulo,
+      dates: `${dtStart}/${dtEnd}`,
+      details: EVENTO.descricao,
+      location: EVENTO.local,
+      ctz: EVENTO.fusoHorario,
+    });
+
+    window.open(
+      `https://calendar.google.com/calendar/render?${params.toString()}`,
+      "_blank",
+      "noopener"
+    );
+  }
+
+  // botão secundário: baixa .ics (Apple Calendar, Outlook, etc.)
   function baixarConvite() {
-    const dtStart = formatICSDate(EVENTO.dataInicio);
-    const dtEnd = formatICSDate(EVENTO.dataFim);
+    const dtStart = formatCalendarDate(EVENTO.dataInicio);
+    const dtEnd = formatCalendarDate(EVENTO.dataFim);
     const uid = `${Date.now()}@convite`;
 
     const ics = [
@@ -278,6 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (ctaCalendar) {
-    ctaCalendar.addEventListener("click", baixarConvite);
+    ctaCalendar.addEventListener("click", abrirGoogleCalendar);
+  }
+  if (ctaIcs) {
+    ctaIcs.addEventListener("click", baixarConvite);
   }
 });
