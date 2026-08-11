@@ -14,9 +14,13 @@ nenhum lugar do site nome de remetente, grupo ou contato — é surpresa mesmo.
 - `gerar_qrcode.py` — script para gerar o QR code final
 
 ## O que é dinâmico aqui
+- **Tela de abertura em formato de rastreio de pedido** (genérico, sem nome
+  ou logo de nenhuma marca) — mostra "Pedido confirmado → Em transporte →
+  Saiu para entrega → Entregue", com barra de progresso animada e código de
+  pedido fake gerado na hora. Ao chegar em "Entregue", solta confete e revela
+  a carta. Tem um botão discreto "pular" pra quem não quiser esperar.
 - Fundo de céu com estrelas que se movem, piscam e, de vez em quando, uma
   estrela cadente cruza a tela — tudo em `<canvas>`, sem imagens.
-- O selo reage ao toque com uma pequena explosão de partículas douradas.
 - As seções seguintes aparecem com animação conforme o usuário rola a página
   (scroll reveal).
 - Contagem regressiva em tempo real até o evento.
