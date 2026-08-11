@@ -6,6 +6,8 @@
   --night-deep:   #05061a;
   --gold:         #cba135;
   --gold-soft:    #eed99b;
+  --orange:       #f5822c;
+  --orange-soft:  #ffb066;
   --paper:        #f8f2e2;
   --paper-dim:    #efe6cf;
   --ember:        #b8593c;
@@ -70,16 +72,13 @@ body{
 
 main{ position: relative; z-index: 1; }
 
-/* =========================================================
-   CENA 1 — SELO
-========================================================= */
 .scene{
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
   padding: 32px 24px;
   text-align: center;
   transition: opacity .7s ease, transform .7s ease, visibility 0s linear .7s;
@@ -92,100 +91,159 @@ main{ position: relative; z-index: 1; }
   visibility: hidden;
 }
 
-.eyebrow{
-  margin: 0;
-  font-size: 12px;
-  letter-spacing: .24em;
+/* =========================================================
+   CENA 1 — RASTREIO (disfarce)
+========================================================= */
+.tracking{
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dim) 100%);
+  color: var(--ink);
+  border-radius: 20px;
+  padding: 32px 26px 28px;
+  box-shadow: 0 30px 70px -20px rgba(0,0,0,.6);
+}
+
+.tracking__eyebrow{
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--gold-soft);
-  opacity: .85;
+  color: #8a7f63;
+  font-weight: 500;
 }
 
-/* selo interativo */
-.seal{
+.tracking__code{
+  margin: 0 0 26px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: .02em;
+}
+
+.tracking__steps{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.step{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: .4;
+  transition: opacity .35s ease;
+}
+
+.step.is-active,
+.step.is-done{
+  opacity: 1;
+}
+
+.step__dot{
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #d8cdae;
+  background: transparent;
+  flex-shrink: 0;
   position: relative;
-  width: 132px;
-  height: 132px;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+  transition: background .35s ease, border-color .35s ease, transform .3s ease;
 }
 
-.seal__ring{
+.step.is-active .step__dot{
+  border-color: var(--orange);
+  background: var(--orange);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px rgba(245,130,44,.18);
+}
+
+.step.is-done .step__dot{
+  border-color: var(--orange);
+  background: var(--orange);
+}
+
+.step.is-done .step__dot::after{
+  content: "";
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  border: 1.5px solid rgba(238,217,155,.35);
-  animation: ringPulse 3s ease-in-out infinite;
+  margin: auto;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) translate(-1px, -1px);
 }
 
-@keyframes ringPulse{
-  0%, 100%{ transform: scale(1); opacity: .5; }
-  50%{ transform: scale(1.08); opacity: 1; }
+.step__label{
+  font-size: 14px;
+  color: #4a4230;
 }
 
-.seal__core{
-  position: absolute;
-  inset: 18px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--gold-soft) 0%, var(--gold) 55%, var(--ember) 100%);
-  box-shadow: 0 0 30px rgba(203,161,53,.55), inset 0 2px 6px rgba(255,255,255,.35);
-  transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .5s ease;
+.step.is-active .step__label,
+.step.is-done .step__label{
+  color: var(--ink);
+  font-weight: 500;
 }
 
-.seal__spark{
-  position: absolute;
-  width: 6px;
+.tracking__bar{
+  width: 100%;
   height: 6px;
-  border-radius: 50%;
-  background: var(--gold-soft);
-  opacity: 0;
-  top: 50%;
-  left: 50%;
+  border-radius: 999px;
+  background: #e7dec2;
+  overflow: hidden;
+  margin-bottom: 14px;
 }
 
-.seal.is-open .seal__core{
-  transform: scale(1.5);
-  opacity: 0;
+.tracking__bar-fill{
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange-soft), var(--orange));
+  transition: width .5s cubic-bezier(.4,0,.2,1);
 }
 
-.seal.is-open .seal__ring{
-  animation: none;
-  transform: scale(2.2);
-  opacity: 0;
-  transition: transform .8s ease, opacity .8s ease;
-}
-
-.seal.is-open .seal__spark{
-  animation: sparkBurst .9s ease forwards;
-}
-.seal.is-open .s1{ --tx: -70px; --ty: -50px; animation-delay: 0s; }
-.seal.is-open .s2{ --tx: 80px;  --ty: -30px; animation-delay: .05s; }
-.seal.is-open .s3{ --tx: 10px;  --ty: -90px; animation-delay: .1s; }
-
-@keyframes sparkBurst{
-  0%{ transform: translate(-50%, -50%) scale(.4); opacity: 1; }
-  100%{ transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 0; }
-}
-
-.tap-hint{
-  margin: 0;
+.tracking__status{
+  margin: 0 0 18px;
   font-size: 13px;
-  color: var(--text-soft);
-  animation: pulse 2.2s ease-in-out infinite;
+  color: #6b6250;
+  min-height: 18px;
 }
 
-@keyframes pulse{
-  0%, 100%{ opacity: .55; }
-  50%{ opacity: 1; }
+.tracking__skip{
+  display: block;
+  margin: 0 auto;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #a89c78;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
-.seal:focus-visible{
-  outline: 3px solid var(--gold-soft);
-  outline-offset: 8px;
-  border-radius: 50%;
+.tracking__skip:hover,
+.tracking__skip:focus-visible{
+  color: var(--orange);
+}
+
+/* confete */
+.confetti{
+  position: fixed;
+  top: -10px;
+  width: 8px;
+  height: 14px;
+  z-index: 5;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall{
+  0%{ transform: translateY(0) rotate(0deg); opacity: 1; }
+  100%{ transform: translateY(110vh) rotate(720deg); opacity: 0; }
 }
 
 /* =========================================================
